@@ -1,0 +1,22 @@
+{
+    "name": "escape/currency-exchange",
+    "description": "Currency exchange API",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Escape\\CurrencyExchange\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mikhail Tsepelev",
+            "email": "cplvmhl@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.13",
+        "guzzlehttp/psr7": "^2.6",
+        "http-interop/http-factory-guzzle": "^1.2"
+    }
+}
