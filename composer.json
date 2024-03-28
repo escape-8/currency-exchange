@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "/database/DatabaseConnection.php"
+            "./middleware/TrailingSlashMiddleware.php",
+            "./database/DatabaseConnection.php"
         ],
         "psr-4": {
             "App\\": "src/"
