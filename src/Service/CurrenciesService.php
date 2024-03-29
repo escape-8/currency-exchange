@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DataGateway\CurrenciesDataGateway;
+use App\DTO\CurrencyDTO;
 use App\Exception\CurrencyNotFoundException;
 
 class CurrenciesService
@@ -30,4 +31,31 @@ class CurrenciesService
         return $this->dataGateway->getAllCurrencies();
     }
 
+    /**
+     * @param array $currenciesDbData
+     * @return array<CurrencyDTO>
+     */
+    public function getCurrenciesDTO(array $currenciesDbData): array
+    {
+        $result = [];
+        foreach ($currenciesDbData as $dbCurrency) {
+            $result[] = $this->getCurrencyDTO($dbCurrency);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $currencyDbData
+     * @return CurrencyDTO
+     */
+    public function getCurrencyDTO(array $currencyDbData): CurrencyDTO
+    {
+        return new CurrencyDTO(
+            $currencyDbData['id'],
+            $currencyDbData['code'],
+            $currencyDbData['full_name'],
+            $currencyDbData['sign'],
+        );
+    }
 }
