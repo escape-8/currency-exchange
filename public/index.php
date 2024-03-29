@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\DTO\ErrorResponseDTO;
 use App\Exception\CurrencyNotFoundException;
 use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
