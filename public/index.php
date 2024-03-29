@@ -28,4 +28,31 @@ $app->get('/currencies', function (Request $request, Response $response) use ($d
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/currency[/{currency}]', function (Request $request, Response $response, array $args) use ($dataBase) {
+    if (!array_key_exists('currency', $args)) {
+        $errorDTO = new ErrorResponseDTO('The currency code is missing in the URL address');
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        $response->getBody()->write($payload);
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+
+    try {
+        $currenciesData = new CurrenciesDataGateway($dataBase);
+        $currenciesService = new CurrenciesService($currenciesData);
+        $currencyData = $currenciesService->getCurrency($args['currency']);
+        $currencyDTO = $currenciesService->getCurrencyDTO($currencyData);
+        $payload = json_encode($currencyDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (CurrencyNotFoundException $e) {
+        $errorDTO = new ErrorResponseDTO($e->getMessage());
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        $response->getBody()->write($payload);
+        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+    }
+
+});
+
 $app->run();
