@@ -18,7 +18,8 @@ class CurrenciesDataGateway
 
     public function getAllCurrencies(): array
     {
-        $statement = $this->dataBase->query("SELECT * FROM currencies");
+        $sql = "SELECT * FROM currencies";
+        $statement = $this->dataBase->query($sql);
         $result = $statement->fetchAll();
 
         if (!$result) {
