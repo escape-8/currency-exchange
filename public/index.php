@@ -12,7 +12,10 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = AppFactory::create();
 $app->add(new TrailingSlashMiddleware());
 
-$app->get('/', function (Request $request, Response $response, $args) {
+$dbConnection = new DatabaseConnection();
+$dataBase = $dbConnection->getConnection();
+
+$app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write("Hello world!");
     return $response;
 });
