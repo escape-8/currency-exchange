@@ -2,6 +2,7 @@
 
 namespace App\DataGateway;
 
+use App\Exception\CurrencyNotFoundException;
 use PDO;
 
 class CurrenciesDataGateway
@@ -14,6 +15,23 @@ class CurrenciesDataGateway
     public function __construct(PDO $dbConnection)
     {
         $this->dataBase = $dbConnection;
+    }
+
+    /**
+     * @throws CurrencyNotFoundException
+     */
+    public function getCurrency(string $currencyCode): array
+    {
+        $sql = "SELECT * FROM currencies WHERE `code` = :code";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute(['code' => $currencyCode]);
+        $result = $statement->fetch();
+
+        if (!$result) {
+            throw new CurrencyNotFoundException();
+        }
+
+        return $result;
     }
 
     public function getAllCurrencies(): array
