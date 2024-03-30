@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\DataGateway\CurrenciesDataGateway;
-use App\DTO\CurrencyDTO;
+use App\DTO\CurrencyRequestDTO;
 use App\DTO\CurrencyResponseDTO;
 use App\Exception\CurrencyNotFoundException;
 
