@@ -65,4 +65,23 @@ $app->get('/currency[/{currency}]', function (Request $request, Response $respon
 
 });
 
+$app->post('/currencies', function (Request $request, Response $response) use ($dataBase) {
+    try {
+        $currenciesData = new CurrenciesDataGateway($dataBase);
+        $currenciesService = new CurrenciesService($currenciesData);
+        $currencyValidation = new CurrencyValidatorService($currenciesData);
+        $requestData = $request->getParsedBody();
+        $currencyAddData = $currenciesService->addCurrency($currencyValidation->validate($requestData));
+        $payload = json_encode($currencyAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (EmptyFieldException|CurrencyCodeLengthException|CodeExistsException|CodeContainOnlyLettersException $e) {
+        $errorDTO = new ErrorResponseDTO($e->getMessage());
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        $response->getBody()->write($payload);
+        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+    }
+});
+
 $app->run();
