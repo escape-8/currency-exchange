@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class CurrencyDTO
+class CurrencyResponseDTO implements DTOInterface
 {
     public readonly int $id;
     public readonly string $code;
@@ -23,5 +23,13 @@ class CurrencyDTO
         $this->sign = $sign;
     }
 
-
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'sign' => $this->sign
+        ];
+    }
 }
