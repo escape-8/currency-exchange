@@ -21,25 +21,31 @@ class CurrenciesService
     /**
      * @throws CurrencyNotFoundException
      */
-    public function getCurrency(string $currencyCode): array
+    public function getCurrency(string $currencyCode): CurrencyResponseDTO
     {
-        return $this->dataGateway->getCurrency($currencyCode);
-    }
-
-    public function getAllCurrencies(): array
-    {
-        return $this->dataGateway->getAllCurrencies();
+        $currencyDbData = $this->dataGateway->getCurrency($currencyCode);
+        return new CurrencyResponseDTO(
+            $currencyDbData['id'],
+            $currencyDbData['code'],
+            $currencyDbData['full_name'],
+            $currencyDbData['sign'],
+        );
     }
 
     /**
-     * @param array $currenciesDbData
-     * @return array<CurrencyDTO>
+     * @return array<CurrencyResponseDTO>
      */
-    public function getCurrenciesDTO(array $currenciesDbData): array
+    public function getAllCurrencies(): array
     {
+        $currenciesDbData = $this->dataGateway->getAllCurrencies();
         $result = [];
         foreach ($currenciesDbData as $dbCurrency) {
-            $result[] = $this->getCurrencyDTO($dbCurrency);
+            $result[] = new CurrencyResponseDTO(
+                $dbCurrency['id'],
+                $dbCurrency['code'],
+                $dbCurrency['full_name'],
+                $dbCurrency['sign'],
+            );
         }
 
         return $result;
