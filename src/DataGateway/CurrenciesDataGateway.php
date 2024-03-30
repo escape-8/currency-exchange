@@ -60,4 +60,16 @@ class CurrenciesDataGateway
 
         return false;
     }
+
+    public function insertCurrency(array $values): void
+    {
+        $sql = "INSERT INTO currencies (`code`, `full_name`, `sign`) VALUES (:code, :name, :sign)";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute($values);
+    }
+
+    public function getLastInsertId(): int
+    {
+        return (int) $this->dataBase->lastInsertId();
+    }
 }
