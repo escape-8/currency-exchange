@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use App\DTO\ErrorResponseDTO;
 use App\Exception\CurrencyNotFoundException;
+use App\Exception\Validation\CodeContainOnlyLettersException;
+use App\Exception\Validation\CodeExistsException;
+use App\Exception\Validation\CurrencyCodeLengthException;
+use App\Exception\Validation\EmptyFieldException;
 use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
