@@ -31,8 +31,7 @@ $app->get('/currencies', function (Request $request, Response $response) use ($d
     $currenciesData = new CurrenciesDataGateway($dataBase);
     $currenciesService = new CurrenciesService($currenciesData);
     $currenciesData = $currenciesService->getAllCurrencies();
-    $currenciesDTO = $currenciesService->getCurrenciesDTO($currenciesData);
-    $payload = json_encode($currenciesDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    $payload = json_encode($currenciesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
     $response->getBody()->write($payload);
     return $response->withHeader('Content-Type', 'application/json');
@@ -51,8 +50,7 @@ $app->get('/currency[/{currency}]', function (Request $request, Response $respon
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
         $currencyData = $currenciesService->getCurrency($args['currency']);
-        $currencyDTO = $currenciesService->getCurrencyDTO($currencyData);
-        $payload = json_encode($currencyDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $payload = json_encode($currencyData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
     } catch (CurrencyNotFoundException $e) {
