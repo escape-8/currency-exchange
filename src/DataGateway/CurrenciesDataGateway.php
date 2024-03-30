@@ -47,4 +47,17 @@ class CurrenciesDataGateway
         return $result;
     }
 
+    public function isCurrencyExists(string $currencyCode): bool
+    {
+        $sql = "SELECT COUNT(*) FROM currencies WHERE `code` = :code";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute(['code' => $currencyCode]);
+        $result = $statement->fetch();
+
+        if ($result['COUNT(*)'] > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
