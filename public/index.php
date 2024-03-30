@@ -9,6 +9,8 @@ use App\Exception\Validation\CodeContainOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
 use App\Exception\Validation\CurrencyCodeLengthException;
 use App\Exception\Validation\EmptyFieldException;
+use App\Service\CurrenciesService;
+use App\Service\CurrencyValidatorService;
 use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
