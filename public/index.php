@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\ErrorResponseDTO;
 use App\Exception\CurrencyNotFoundException;
 use App\Exception\Validation\CodeContainOnlyLettersException;
