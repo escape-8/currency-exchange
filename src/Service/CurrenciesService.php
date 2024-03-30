@@ -51,17 +51,12 @@ class CurrenciesService
         return $result;
     }
 
-    /**
-     * @param array $currencyDbData
-     * @return CurrencyDTO
-     */
-    public function getCurrencyDTO(array $currencyDbData): CurrencyDTO
+
+    public function addCurrency(CurrencyRequestDTO $requestDTO): CurrencyResponseDTO
     {
-        return new CurrencyDTO(
-            $currencyDbData['id'],
-            $currencyDbData['code'],
-            $currencyDbData['full_name'],
-            $currencyDbData['sign'],
-        );
+        $data = $requestDTO->toArray();
+        $this->dataGateway->insertCurrency($data);
+        $id = $this->dataGateway->getLastInsertId();
+        return new CurrencyResponseDTO($id, $data['code'], $data['name'], $data['sign']);
     }
 }
