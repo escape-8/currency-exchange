@@ -8,10 +8,10 @@ use App\Exception\Validation\CodeContainOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
 use App\Exception\Validation\CurrencyCodeLengthException;
 use App\Exception\Validation\EmptyFieldException;
+use App\Model\Currency;
 
 class CurrencyValidatorService
 {
-    private const COUNT_LETTERS_IN_CODE = 3;
     private CurrenciesDataGateway $dataGateway;
 
     /**
@@ -70,7 +70,7 @@ class CurrencyValidatorService
     {
         preg_match_all('/[[:alpha:]]/', $currencyCode, $matches, PREG_PATTERN_ORDER);
 
-        if (count($matches[0]) !== self::COUNT_LETTERS_IN_CODE) {
+        if (count($matches[0]) !== Currency::COUNT_LETTERS_IN_CODE) {
             throw new CodeContainOnlyLettersException();
         }
     }
@@ -81,7 +81,7 @@ class CurrencyValidatorService
     public function checkCurrencyCodeLength(string $currencyCode): void
     {
         $nonSpaceCode = str_replace(' ', '', $currencyCode);
-        if (strlen($nonSpaceCode) !== self::COUNT_LETTERS_IN_CODE) {
+        if (strlen($nonSpaceCode) !== Currency::COUNT_LETTERS_IN_CODE) {
             throw new CurrencyCodeLengthException('The currency code must contain three uppercase letters. Standard ISO 4217.');
         }
     }

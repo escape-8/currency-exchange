@@ -4,6 +4,7 @@ namespace App\Model;
 
 class Currency
 {
+    public const COUNT_LETTERS_IN_CODE = 3;
     private int $id;
     private string $code;
     private string $fullName;
