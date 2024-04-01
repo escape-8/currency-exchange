@@ -5,6 +5,8 @@ namespace App\Service;
 use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\CurrencyResponseDTO;
 use App\DTO\ExchangeRateResponseDTO;
+use App\Exception\DatabaseNotFoundException;
+use App\Model\Currency;
 
 class ExchangeRatesService
 {
@@ -16,6 +18,32 @@ class ExchangeRatesService
     public function __construct(ExchangeRatesDataGateway $dataGateway)
     {
         $this->dataGateway = $dataGateway;
+    }
+
+    /**
+     * @throws DatabaseNotFoundException
+     */
+    public function getExchangeRate(string $currencyPair): ExchangeRateResponseDTO
+    {
+        [$baseCurrency, $targetCurrency] = str_split($currencyPair, Currency::COUNT_LETTERS_IN_CODE);
+        $exchangeRateDbData = $this->dataGateway->getExchangeRate($baseCurrency, $targetCurrency);
+
+        return new ExchangeRateResponseDTO(
+            $exchangeRateDbData['id'],
+            new CurrencyResponseDTO(
+                $exchangeRateDbData['base_currency_id'],
+                $exchangeRateDbData['base_currency_code'],
+                $exchangeRateDbData['base_currency_name'],
+                $exchangeRateDbData['base_currency_sign'],
+            ),
+            new CurrencyResponseDTO(
+                $exchangeRateDbData['target_currency_id'],
+                $exchangeRateDbData['target_currency_code'],
+                $exchangeRateDbData['target_currency_name'],
+                $exchangeRateDbData['target_currency_sign'],
+            ),
+            $exchangeRateDbData['rate']
+        );
     }
 
     /**
