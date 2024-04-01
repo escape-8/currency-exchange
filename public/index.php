@@ -96,4 +96,29 @@ $app->get('/exchangeRates', function (Request $request, Response $response) use 
     return $response->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
+    if (!array_key_exists('currencyPair', $args)) {
+        $errorDTO = new ErrorResponseDTO('The currency code pair is missing in the URL address');
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        $response->getBody()->write($payload);
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+
+    try {
+        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+        $exchangeRateService = new ExchangeRatesService($exchangeRateData);
+        $exchangeRateData = $exchangeRateService->getExchangeRate($args['currencyPair']);
+        $payload = json_encode($exchangeRateData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (DatabaseNotFoundException $e) {
+        $errorDTO = new ErrorResponseDTO($e->getMessage());
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+    }
+
+});
+
 $app->run();
