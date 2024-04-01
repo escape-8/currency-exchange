@@ -2,9 +2,11 @@
 
 namespace App\DataGateway;
 
-class ExchangeRatesDataGateway extends DataGateway
+use PDO;
+
+abstract class DataGateway
 {
-    private PDO $dataBase;
+    protected PDO $dataBase;
 
     /**
      * @param PDO $dbConnection
@@ -13,5 +15,4 @@ class ExchangeRatesDataGateway extends DataGateway
     {
         $this->dataBase = $dbConnection;
     }
-
 }

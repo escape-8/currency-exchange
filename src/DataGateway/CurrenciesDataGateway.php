@@ -3,20 +3,9 @@
 namespace App\DataGateway;
 
 use App\Exception\CurrencyNotFoundException;
-use PDO;
 
-class CurrenciesDataGateway
+class CurrenciesDataGateway extends DataGateway
 {
-    private PDO $dataBase;
-
-    /**
-     * @param PDO $dbConnection
-     */
-    public function __construct(PDO $dbConnection)
-    {
-        $this->dataBase = $dbConnection;
-    }
-
     /**
      * @throws CurrencyNotFoundException
      */
