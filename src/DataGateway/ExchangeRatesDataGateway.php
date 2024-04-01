@@ -2,8 +2,42 @@
 
 namespace App\DataGateway;
 
+use App\Exception\DatabaseNotFoundException;
+
 class ExchangeRatesDataGateway extends DataGateway
 {
+    /**
+     * @throws DatabaseNotFoundException
+     */
+    public function getExchangeRate(?string $baseCurrencyCode, ?string $targetCurrencyCode): array
+    {
+        $sql = "SELECT 
+                    exrates.id,
+                    cur_base.id AS base_currency_id,
+                    cur_base.code AS base_currency_code,
+                    cur_base.full_name AS base_currency_name,
+                    cur_base.sign AS base_currency_sign,
+                    cur_target.id AS target_currency_id,
+                    cur_target.code AS target_currency_code,
+                    cur_target.full_name AS target_currency_name,
+                    cur_target.sign AS target_currency_sign,
+                    exrates.rate
+                FROM exchange_rates AS exrates
+                JOIN currencies AS cur_base
+                ON cur_base.id=exrates.base_currency_id
+                JOIN currencies AS cur_target
+                ON cur_target.id=exrates.target_currency_id
+                WHERE cur_base.code = :baseCurrencyCode AND cur_target.code = :targetCurrencyCode";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute(['baseCurrencyCode' => $baseCurrencyCode, 'targetCurrencyCode' => $targetCurrencyCode]);
+        $result = $statement->fetch();
+
+        if (!$result) {
+            throw new DatabaseNotFoundException('Exchange rate for pair not found');
+        }
+
+        return $result;
+    }
     public function getAllCurrencies(): array
     {
         $sql = "SELECT 
