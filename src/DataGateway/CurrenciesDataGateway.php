@@ -2,12 +2,12 @@
 
 namespace App\DataGateway;
 
-use App\Exception\CurrencyNotFoundException;
+use App\Exception\DatabaseNotFoundException;
 
 class CurrenciesDataGateway extends DataGateway
 {
     /**
-     * @throws CurrencyNotFoundException
+     * @throws DatabaseNotFoundException
      */
     public function getCurrency(string $currencyCode): array
     {
@@ -17,7 +17,7 @@ class CurrenciesDataGateway extends DataGateway
         $result = $statement->fetch();
 
         if (!$result) {
-            throw new CurrencyNotFoundException();
+            throw new DatabaseNotFoundException('Currency not found');
         }
 
         return $result;

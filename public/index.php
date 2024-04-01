@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\DataGateway\CurrenciesDataGateway;
 use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ErrorResponseDTO;
-use App\Exception\CurrencyNotFoundException;
+use App\Exception\DatabaseNotFoundException;
 use App\Exception\Validation\CodeContainOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
 use App\Exception\Validation\CurrencyCodeLengthException;
@@ -57,7 +57,7 @@ $app->get('/currency[/{currency}]', function (Request $request, Response $respon
         $payload = json_encode($currencyData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
-    } catch (CurrencyNotFoundException $e) {
+    } catch (DatabaseNotFoundException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
         $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
