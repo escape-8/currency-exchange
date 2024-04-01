@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\DataGateway\CurrenciesDataGateway;
+use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ErrorResponseDTO;
 use App\Exception\CurrencyNotFoundException;
 use App\Exception\Validation\CodeContainOnlyLettersException;
@@ -11,6 +12,7 @@ use App\Exception\Validation\CurrencyCodeLengthException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Service\CurrenciesService;
 use App\Service\CurrencyValidatorService;
+use App\Service\ExchangeRatesService;
 use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -82,6 +84,16 @@ $app->post('/currencies', function (Request $request, Response $response) use ($
         $response->getBody()->write($payload);
         return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
     }
+});
+
+$app->get('/exchangeRates', function (Request $request, Response $response) use ($dataBase) {
+    $currenciesData = new ExchangeRatesDataGateway($dataBase);
+    $currenciesService = new ExchangeRatesService($currenciesData);
+    $currenciesData = $currenciesService->getAllExchangeRates();
+    $payload = json_encode($currenciesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+    $response->getBody()->write($payload);
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->run();
