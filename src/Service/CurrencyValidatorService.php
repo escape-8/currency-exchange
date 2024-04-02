@@ -32,9 +32,7 @@ class CurrencyValidatorService extends ValidatorService
      */
     public function validate(array $data): CurrencyRequestDTO
     {
-        $this->validateFields($data);
-        $this->checkCurrencyCodeLength($data['code']);
-        $this->checkContainOnlyLettersInCurrencyCode($data['code']);
+        $this->checkEmptyFields($data);
         $this->checkStringLength($data['code'], Currency::COUNT_LETTERS_IN_CODE);
         $this->checkSpace($data['code']);
         $this->checkContainsOnlyLetters($data['code']);
@@ -46,7 +44,7 @@ class CurrencyValidatorService extends ValidatorService
     /**
      * @throws EmptyFieldException
      */
-    public function validateFields(array $data): void
+    public function checkEmptyFields(array $data): void
     {
         $errors = [];
 
