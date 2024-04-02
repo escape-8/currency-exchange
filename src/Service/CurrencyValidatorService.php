@@ -11,7 +11,7 @@ use App\Exception\Validation\InputDataLengthException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Model\Currency;
 
-class CurrencyValidatorService
+class CurrencyValidatorService extends ValidatorService
 {
     private CurrenciesDataGateway $dataGateway;
 
@@ -35,6 +35,9 @@ class CurrencyValidatorService
         $this->validateFields($data);
         $this->checkCurrencyCodeLength($data['code']);
         $this->checkContainOnlyLettersInCurrencyCode($data['code']);
+        $this->checkStringLength($data['code'], Currency::COUNT_LETTERS_IN_CODE);
+        $this->checkSpace($data['code']);
+        $this->checkContainsOnlyLetters($data['code']);
         $this->checkExistsCurrencyCode(strtoupper($data['code']));
 
         return new CurrencyRequestDTO(strtoupper($data['code']), $data['name'], $data['sign']);
@@ -63,29 +66,6 @@ class CurrencyValidatorService
             throw new EmptyFieldException($errors);
         }
 
-    }
-
-    /**
-     * @throws CodeContainOnlyLettersException
-     */
-    public function checkContainOnlyLettersInCurrencyCode(string $currencyCode): void
-    {
-        preg_match_all('/[[:alpha:]]/', $currencyCode, $matches, PREG_PATTERN_ORDER);
-
-        if (count($matches[0]) !== Currency::COUNT_LETTERS_IN_CODE) {
-            throw new CodeContainOnlyLettersException();
-        }
-    }
-
-    /**
-     * @throws CurrencyCodeLengthException
-     */
-    public function checkCurrencyCodeLength(string $currencyCode): void
-    {
-        $nonSpaceCode = str_replace(' ', '', $currencyCode);
-        if (strlen($nonSpaceCode) !== Currency::COUNT_LETTERS_IN_CODE) {
-            throw new CurrencyCodeLengthException('The currency code must contain three uppercase letters. Standard ISO 4217.');
-        }
     }
 
     /**
