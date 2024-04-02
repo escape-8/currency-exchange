@@ -4,6 +4,7 @@ namespace App\Model;
 
 class ExchangeRate
 {
+    public const COUNT_LETTERS_IN_EXCHANGE_RATE_CODE = 6;
     private int $id;
     private Currency $baseCurrency;
     private Currency $targetCurrency;
