@@ -5,8 +5,9 @@ namespace App\Service;
 use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\CurrencyRequestDTO;
 use App\Exception\Validation\CodeContainOnlyLettersException;
+use App\Exception\Validation\NotContainsOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
-use App\Exception\Validation\CurrencyCodeLengthException;
+use App\Exception\Validation\InputDataLengthException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Model\Currency;
 
@@ -25,8 +26,8 @@ class CurrencyValidatorService
     /**
      * @throws EmptyFieldException
      * @throws CodeExistsException
-     * @throws CodeContainOnlyLettersException
-     * @throws CurrencyCodeLengthException
+     * @throws NotContainsOnlyLettersException
+     * @throws InputDataLengthException
      */
     public function validate(array $data): CurrencyRequestDTO
     {
