@@ -101,4 +101,24 @@ class ExchangeRatesDataGateway extends DataGateway
     return $result;
 }
 
+    public function isExchangeRateExists(string $baseCurrencyCode, string $targetCurrencyCode): bool
+    {
+        $sql = "SELECT exrates.id
+                FROM exchange_rates AS exrates
+                JOIN currencies AS cur_base
+                ON cur_base.code = :baseCurrencyCode
+                JOIN currencies AS cur_target
+                ON cur_target.code = :targetCurrencyCode
+                WHERE exrates.base_currency_id=cur_base.id AND exrates.target_currency_id=cur_target.id";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute(['baseCurrencyCode' => $baseCurrencyCode, 'targetCurrencyCode' => $targetCurrencyCode]);
+        $result = $statement->fetch();
+
+        if ($result) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
