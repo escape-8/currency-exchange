@@ -4,11 +4,8 @@ namespace App\Service;
 
 use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\CurrencyRequestDTO;
-use App\Exception\Validation\ContainsSpaceException;
 use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\NotContainsOnlyLettersException;
-use App\Exception\Validation\CodeExistsException;
-use App\Exception\Validation\InputDataLengthException;
+use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Model\Currency;
 
@@ -26,10 +23,7 @@ class CurrencyValidatorService extends ValidatorService
 
     /**
      * @throws EmptyFieldException
-     * @throws CodeExistsException
-     * @throws NotContainsOnlyLettersException
-     * @throws InputDataLengthException
-     * @throws ContainsSpaceException
+     * @throws DataExistsException
      * @throws IncorrectInputException
      */
     public function validate(array $data): CurrencyRequestDTO
@@ -41,7 +35,7 @@ class CurrencyValidatorService extends ValidatorService
         $this->checkAllLettersUpperCase($data['code']);
 
         if ($this->dataGateway->isCurrencyExists($data['code'])) {
-            throw new CodeExistsException('A currency with this code already exists', $data['code']);
+            throw new DataExistsException('A currency with this code already exists: ' . $data['code']);
         }
 
         return new CurrencyRequestDTO($data['code'], $data['name'], $data['sign']);

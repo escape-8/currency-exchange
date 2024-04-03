@@ -6,12 +6,9 @@ use App\DataGateway\CurrenciesDataGateway;
 use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ExchangeRateRequestDTO;
 use App\Exception\DatabaseNotFoundException;
-use App\Exception\Validation\CodeExistsException;
-use App\Exception\Validation\ContainsSpaceException;
+use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
-use App\Exception\Validation\InputDataLengthException;
 use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\NotContainsOnlyLettersException;
 use App\Model\Currency;
 
 class ExchangeRateValidatorService extends ValidatorService
@@ -32,10 +29,7 @@ class ExchangeRateValidatorService extends ValidatorService
     /**
      * @throws DatabaseNotFoundException
      * @throws EmptyFieldException
-     * @throws InputDataLengthException
-     * @throws ContainsSpaceException
-     * @throws NotContainsOnlyLettersException
-     * @throws CodeExistsException
+     * @throws DataExistsException
      * @throws IncorrectInputException
      */
     public function validate(array $data): ExchangeRateRequestDTO
@@ -65,8 +59,7 @@ class ExchangeRateValidatorService extends ValidatorService
         }
 
         if ($this->exchangeRatesDataGateway->isExchangeRateExists($data['baseCurrencyCode'], $data['targetCurrencyCode'])) {
-            throw new CodeExistsException('A currency pair with this codes already exists',
-                $data['baseCurrencyCode'] . $data['targetCurrencyCode']);
+            throw new DataExistsException('A currency pair with this codes already exists: ' . $data['baseCurrencyCode'] . $data['targetCurrencyCode']);
         }
 
         return new ExchangeRateRequestDTO(

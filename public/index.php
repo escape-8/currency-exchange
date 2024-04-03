@@ -6,11 +6,8 @@ use App\DataGateway\CurrenciesDataGateway;
 use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ErrorResponseDTO;
 use App\Exception\DatabaseNotFoundException;
-use App\Exception\Validation\ContainsSpaceException;
 use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\NotContainsOnlyLettersException;
-use App\Exception\Validation\CodeExistsException;
-use App\Exception\Validation\InputDataLengthException;
+use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Service\CurrenciesService;
 use App\Service\CurrencyValidatorService;
@@ -80,7 +77,7 @@ $app->post('/currencies', function (Request $request, Response $response) use ($
         $payload = json_encode($currencyAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
-    } catch (EmptyFieldException|InputDataLengthException|CodeExistsException|NotContainsOnlyLettersException|ContainsSpaceException $e) {
+    } catch (EmptyFieldException|DataExistsException|IncorrectInputException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
         $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
@@ -138,10 +135,7 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
         return $response->withHeader('Content-Type', 'application/json');
     } catch (
         EmptyFieldException|
-        InputDataLengthException|
-        NotContainsOnlyLettersException|
-        ContainsSpaceException|
-        CodeExistsException|
+        DataExistsException|
         DatabaseNotFoundException|
         IncorrectInputException $e
     ) {

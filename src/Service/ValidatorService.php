@@ -2,43 +2,40 @@
 
 namespace App\Service;
 
-use App\Exception\Validation\ContainsSpaceException;
-use App\Exception\Validation\InputDataLengthException;
 use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\NotContainsOnlyLettersException;
 
 abstract class ValidatorService
 {
     /**
-     * @throws NotContainsOnlyLettersException
+     * @throws IncorrectInputException
      */
     public function checkContainsOnlyLetters(string $string): void
     {
         preg_match_all('/[[:alpha:]]/', $string, $matches, PREG_PATTERN_ORDER);
 
         if (count($matches[0]) !== strlen($string)) {
-            throw new NotContainsOnlyLettersException($string);
+            throw new IncorrectInputException("The '$string' must contain only letters");
         }
     }
 
     /**
-     * @throws InputDataLengthException
+     * @throws IncorrectInputException
      */
     public function checkStringLength(string $string, int $stringMaxLength): void
     {
         if (strlen($string) !== $stringMaxLength) {
-            throw new InputDataLengthException($string , $stringMaxLength);
+            throw new IncorrectInputException("The '$string' must contain $stringMaxLength symbols");
         }
     }
 
     /**
-     * @throws ContainsSpaceException
+     * @throws IncorrectInputException
      */
     public function checkSpace($string): void
     {
         $nonSpaceString = str_replace(' ', '', $string);
         if (strlen($nonSpaceString) !== strlen($string)) {
-            throw new ContainsSpaceException($string);
+            throw new IncorrectInputException("The line '$string' must not contain spaces");
         }
     }
 
