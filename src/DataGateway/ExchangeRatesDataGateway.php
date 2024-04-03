@@ -121,4 +121,11 @@ class ExchangeRatesDataGateway extends DataGateway
         return false;
     }
 
+    public function insertExchangeRate(array $values): void
+    {
+        $sql = "INSERT INTO exchange_rates (`base_currency_id`, `target_currency_id`, `rate`)
+                VALUES (:baseCurrencyId, :targetCurrencyId, :rate)";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute($values);
+    }
 }
