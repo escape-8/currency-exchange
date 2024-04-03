@@ -38,7 +38,7 @@ class CurrencyValidatorService extends ValidatorService
         $this->checkStringLength($data['code'], Currency::COUNT_LETTERS_IN_CODE);
         $this->checkSpace($data['code']);
         $this->checkContainsOnlyLetters($data['code']);
-        $this->checkExistsCurrencyCode(strtoupper($data['code']));
+        $this->checkAllLettersUpperCase($data['code']);
 
         return new CurrencyRequestDTO(strtoupper($data['code']), $data['name'], $data['sign']);
     }
