@@ -15,4 +15,9 @@ abstract class DataGateway
     {
         $this->dataBase = $dbConnection;
     }
+
+    public function getLastInsertId(): int
+    {
+        return (int) $this->dataBase->lastInsertId();
+    }
 }

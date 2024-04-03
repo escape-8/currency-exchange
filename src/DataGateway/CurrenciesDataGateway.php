@@ -56,9 +56,4 @@ class CurrenciesDataGateway extends DataGateway
         $statement = $this->dataBase->prepare($sql);
         $statement->execute($values);
     }
-
-    public function getLastInsertId(): int
-    {
-        return (int) $this->dataBase->lastInsertId();
-    }
 }
