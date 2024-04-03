@@ -40,4 +40,15 @@ abstract class ValidatorService
             throw new ContainsSpaceException($string);
         }
     }
+
+    /**
+     * @throws IncorrectInputException
+     */
+    public function checkIsNumeric(mixed $value): void
+    {
+        if (!is_numeric($value)) {
+            throw new IncorrectInputException($value);
+        }
+    }
+
 }
