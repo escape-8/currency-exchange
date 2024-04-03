@@ -40,7 +40,11 @@ class CurrencyValidatorService extends ValidatorService
         $this->checkContainsOnlyLetters($data['code']);
         $this->checkAllLettersUpperCase($data['code']);
 
-        return new CurrencyRequestDTO(strtoupper($data['code']), $data['name'], $data['sign']);
+        if ($this->dataGateway->isCurrencyExists($data['code'])) {
+            throw new CodeExistsException('A currency with this code already exists', $data['code']);
+        }
+
+        return new CurrencyRequestDTO($data['code'], $data['name'], $data['sign']);
     }
 
     /**
@@ -66,15 +70,5 @@ class CurrencyValidatorService extends ValidatorService
             throw new EmptyFieldException($errors);
         }
 
-    }
-
-    /**
-     * @throws CodeExistsException
-     */
-    protected function checkExistsCurrencyCode(string $currencyCode): void
-    {
-        if ($this->dataGateway->isCurrencyExists($currencyCode)) {
-            throw new CodeExistsException('A currency with this code already exists', $currencyCode);
-        }
     }
 }
