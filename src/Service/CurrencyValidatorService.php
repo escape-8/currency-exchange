@@ -5,6 +5,7 @@ namespace App\Service;
 use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\CurrencyRequestDTO;
 use App\Exception\Validation\ContainsSpaceException;
+use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\NotContainsOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
 use App\Exception\Validation\InputDataLengthException;
@@ -29,6 +30,7 @@ class CurrencyValidatorService extends ValidatorService
      * @throws NotContainsOnlyLettersException
      * @throws InputDataLengthException
      * @throws ContainsSpaceException
+     * @throws IncorrectInputException
      */
     public function validate(array $data): CurrencyRequestDTO
     {

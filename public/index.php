@@ -7,6 +7,7 @@ use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ErrorResponseDTO;
 use App\Exception\DatabaseNotFoundException;
 use App\Exception\Validation\ContainsSpaceException;
+use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\NotContainsOnlyLettersException;
 use App\Exception\Validation\CodeExistsException;
 use App\Exception\Validation\InputDataLengthException;

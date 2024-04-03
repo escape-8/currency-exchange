@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Exception\Validation\ContainsSpaceException;
 use App\Exception\Validation\InputDataLengthException;
+use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\NotContainsOnlyLettersException;
 
 abstract class ValidatorService
