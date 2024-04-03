@@ -51,7 +51,7 @@ class ExchangeRatesService
      */
     public function getAllExchangeRates(): array
     {
-        $exchangeRatesDbData = $this->dataGateway->getAllCurrencies();
+        $exchangeRatesDbData = $this->dataGateway->getAllExchangeRates();
         $result = [];
         foreach ($exchangeRatesDbData as $dbCurrency) {
             $result[] = new ExchangeRateResponseDTO(

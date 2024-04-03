@@ -38,7 +38,8 @@ class ExchangeRatesDataGateway extends DataGateway
 
         return $result;
     }
-    public function getAllCurrencies(): array
+
+    public function getAllExchangeRates(): array
     {
         $sql = "SELECT 
                     exrates.id,
