@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\CurrencyResponseDTO;
+use App\DTO\ExchangeRateRequestDTO;
 use App\DTO\ExchangeRateResponseDTO;
 use App\Exception\DatabaseNotFoundException;
 use App\Model\Currency;
