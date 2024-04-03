@@ -51,4 +51,13 @@ abstract class ValidatorService
         }
     }
 
+    /**
+     * @throws IncorrectInputException
+     */
+    public function checkAllLettersUpperCase(string $string): void
+    {
+        if ($string !== strtoupper($string)) {
+            throw new IncorrectInputException("The line '$string' must be only uppercase letters");
+        }
+    }
 }
