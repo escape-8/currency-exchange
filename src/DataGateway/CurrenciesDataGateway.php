@@ -17,7 +17,7 @@ class CurrenciesDataGateway extends DataGateway
         $result = $statement->fetch();
 
         if (!$result) {
-            throw new DatabaseNotFoundException('Currency not found');
+            throw new DatabaseNotFoundException("Currency not found: $currencyCode");
         }
 
         return $result;
