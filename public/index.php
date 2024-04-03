@@ -128,8 +128,7 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
         $exchangeRateValidation = new ExchangeRateValidatorService($exchangeRateData, $currencyData);
         $requestData = $request->getParsedBody();
-        $exchangeRateData = $exchangeRateValidation->validate($requestData);
-        $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateData);
+        $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
         $payload = json_encode($exchangeRateAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
