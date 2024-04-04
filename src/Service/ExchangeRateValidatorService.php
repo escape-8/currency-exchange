@@ -65,7 +65,7 @@ class ExchangeRateValidatorService extends ValidatorService
         return new ExchangeRateRequestDTO(
             $this->currenciesDataGateway->getCurrency($data['baseCurrencyCode'])['id'],
             $this->currenciesDataGateway->getCurrency($data['targetCurrencyCode'])['id'],
-            filter_var($data['rate'], FILTER_VALIDATE_FLOAT)
+            $data['rate']
         );
     }
 

@@ -11,13 +11,13 @@ class ExchangeRateRequestDTO implements DTOInterface
     /**
      * @param int $baseCurrencyId
      * @param int $targetCurrencyId
-     * @param float $rate
+     * @param string $rate
      */
-    public function __construct(int $baseCurrencyId, int $targetCurrencyId, float $rate)
+    public function __construct(int $baseCurrencyId, int $targetCurrencyId, string $rate)
     {
         $this->baseCurrencyId = $baseCurrencyId;
         $this->targetCurrencyId = $targetCurrencyId;
-        $this->rate = $rate;
+        $this->rate = (float) $rate;
     }
 
     public function toArray(): array
