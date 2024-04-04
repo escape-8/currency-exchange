@@ -109,4 +109,15 @@ class ExchangeRatesService
         $this->dataGateway->insertExchangeRate($requestDTO->toArray());
         return $this->getExchangeRatesByIds($requestDTO->baseCurrencyId, $requestDTO->targetCurrencyId);
     }
+
+    /**
+     * @throws DatabaseNotFoundException
+     */
+    public function changeExchangeRate(string $currencyPair, array $data): ExchangeRateResponseDTO
+    {
+        $rate = (float) $data['rate'];
+        $exchangeRate = $this->getExchangeRateByCurrencyPairCode($currencyPair);
+        $this->dataGateway->updateExchangeRate(['id' => $exchangeRate->id, 'rate' => $rate]);
+        return $this->getExchangeRateByCurrencyPairCode($currencyPair);
+    }
 }
