@@ -10,6 +10,7 @@ use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Exception\Validation\IncorrectInputException;
 use App\Model\Currency;
+use App\Model\ExchangeRate;
 
 class ExchangeRateValidatorService extends ValidatorService
 {
@@ -67,6 +68,26 @@ class ExchangeRateValidatorService extends ValidatorService
             $this->currenciesDataGateway->getCurrency($data['targetCurrencyCode'])['id'],
             $data['rate']
         );
+    }
+
+    /**
+     * @throws DatabaseNotFoundException
+     * @throws IncorrectInputException
+     */
+    public function validateCurrencyPair(string $currencyPair): void
+    {
+        if (strlen($currencyPair) !== ExchangeRate::COUNT_LETTERS_IN_EXCHANGE_RATE_CODE) {
+            throw new IncorrectInputException(
+                'The currency pair must contain uppercase letters. ' .
+                '3 letters – base currency and 3 letters – target currency. For example: EURUSD, USDRUB, BTCUSD'
+            );
+        }
+
+        [$baseCurrencyCode, $targetCurrencyCode] = str_split($currencyPair, Currency::COUNT_LETTERS_IN_CODE);
+
+        if (!$this->exchangeRatesDataGateway->isExchangeRateExists($baseCurrencyCode, $targetCurrencyCode)) {
+            throw new DatabaseNotFoundException("Currency pair $currencyPair is not in the database");
+        }
     }
 
     /**
