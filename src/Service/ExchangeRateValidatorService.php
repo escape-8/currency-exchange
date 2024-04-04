@@ -44,7 +44,7 @@ class ExchangeRateValidatorService extends ValidatorService
         $this->checkAllLettersUpperCase($data['baseCurrencyCode']);
         $this->checkAllLettersUpperCase($data['targetCurrencyCode']);
         $this->checkIsNumeric($data['rate']);
-
+        $this->validateRateNumericSyntax($data['rate']);
 
         if (!$this->currenciesDataGateway->isCurrencyExists($data['baseCurrencyCode'])) {
             throw new DatabaseNotFoundException(
@@ -67,6 +67,17 @@ class ExchangeRateValidatorService extends ValidatorService
             $this->currenciesDataGateway->getCurrency($data['targetCurrencyCode'])['id'],
             $data['rate']
         );
+    }
+
+    /**
+     * @throws IncorrectInputException
+     */
+    public function validateRateNumericSyntax(string $rate): void
+    {
+        preg_match('/^0\d/', $rate, $matches);
+        if (count($matches) > 0) {
+            throw new IncorrectInputException("Format '$rate' incorrect. Example correct format: 1, 2.61, 0.03021 etc");
+        }
     }
 
     /**
