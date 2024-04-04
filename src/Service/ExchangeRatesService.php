@@ -24,10 +24,10 @@ class ExchangeRatesService
     /**
      * @throws DatabaseNotFoundException
      */
-    public function getExchangeRate(string $currencyPair): ExchangeRateResponseDTO
+    public function getExchangeRateByCurrencyPairCode(string $currencyPair): ExchangeRateResponseDTO
     {
         [$baseCurrency, $targetCurrency] = str_split($currencyPair, Currency::COUNT_LETTERS_IN_CODE);
-        $exchangeRateDbData = $this->dataGateway->getExchangeRate($baseCurrency, $targetCurrency);
+        $exchangeRateDbData = $this->dataGateway->getExchangeRateByCurrencyCodes($baseCurrency, $targetCurrency);
 
         return new ExchangeRateResponseDTO(
             $exchangeRateDbData['id'],

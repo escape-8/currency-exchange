@@ -108,7 +108,7 @@ $app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response
     try {
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateData = $exchangeRateService->getExchangeRate($args['currencyPair']);
+        $exchangeRateData = $exchangeRateService->getExchangeRateByCurrencyPairCode($args['currencyPair']);
         $payload = json_encode($exchangeRateData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');

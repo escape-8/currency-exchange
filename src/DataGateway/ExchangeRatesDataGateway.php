@@ -9,7 +9,7 @@ class ExchangeRatesDataGateway extends DataGateway
     /**
      * @throws DatabaseNotFoundException
      */
-    public function getExchangeRate(?string $baseCurrencyCode, ?string $targetCurrencyCode): array
+    public function getExchangeRateByCurrencyCodes(?string $baseCurrencyCode, ?string $targetCurrencyCode): array
     {
         $sql = "SELECT 
                     exrates.id,
