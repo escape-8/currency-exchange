@@ -45,7 +45,7 @@ abstract class ValidatorService
     public function checkIsNumeric(mixed $value): void
     {
         if (!is_numeric($value)) {
-            throw new IncorrectInputException($value);
+            throw new IncorrectInputException("Format '$value' incorrect. Example correct format: 1, 2.61, 0.03021 etc");
         }
     }
 
