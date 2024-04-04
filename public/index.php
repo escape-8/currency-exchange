@@ -131,7 +131,7 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
         $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
         $payload = json_encode($exchangeRateAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     } catch (
         EmptyFieldException|
         DataExistsException|
