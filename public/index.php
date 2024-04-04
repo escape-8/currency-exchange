@@ -147,4 +147,25 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
     }
 });
 
+$app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
+    try {
+        $currencyData = new CurrenciesDataGateway($dataBase);
+        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+        $exchangeRateService = new ExchangeRatesService($exchangeRateData);
+        $exchangeRateValidation = new ExchangeRateValidatorService($exchangeRateData, $currencyData);
+        $data = $request->getParsedBody();
+        $exchangeRateValidation->validateRate($data);
+        $exchangeRateValidation->validateCurrencyPair($args['currencyPair']);
+        $exchangeRateUpdateData = $exchangeRateService->changeExchangeRate($args['currencyPair'], $data);
+        $payload = json_encode($exchangeRateUpdateData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (EmptyFieldException | IncorrectInputException | DatabaseNotFoundException $e) {
+        $errorDTO = new ErrorResponseDTO($e->getMessage());
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+    }
+});
+
 $app->run();
