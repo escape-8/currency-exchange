@@ -128,4 +128,11 @@ class ExchangeRatesDataGateway extends DataGateway
         $statement = $this->dataBase->prepare($sql);
         $statement->execute($values);
     }
+
+    public function updateExchangeRate(array $values): void
+    {
+        $sql = "UPDATE exchange_rates SET `rate` = :rate WHERE exchange_rates.id = :id";
+        $statement = $this->dataBase->prepare($sql);
+        $statement->execute($values);
+    }
 }
