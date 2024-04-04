@@ -71,6 +71,26 @@ class ExchangeRateValidatorService extends ValidatorService
     }
 
     /**
+     * @throws IncorrectInputException
+     * @throws EmptyFieldException
+     */
+    public function validateRate(array $data): void
+    {
+        $errors = [];
+
+        if (empty($data['rate'])) {
+            $errors[] = 'Exchange Rate';
+        }
+
+        if ($errors) {
+            throw new EmptyFieldException($errors);
+        }
+
+        $this->checkIsNumeric($data['rate']);
+        $this->validateRateNumericSyntax($data['rate']);
+    }
+
+    /**
      * @throws DatabaseNotFoundException
      * @throws IncorrectInputException
      */
