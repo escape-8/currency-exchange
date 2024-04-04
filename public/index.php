@@ -22,6 +22,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 $app->add(new TrailingSlashMiddleware());
+$app->addBodyParsingMiddleware();
 
 $dbConnection = new DatabaseConnection();
 $dataBase = $dbConnection->getConnection();
