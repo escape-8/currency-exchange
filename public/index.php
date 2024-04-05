@@ -10,6 +10,7 @@ use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Service\CurrenciesService;
+use App\Service\CurrencyExchangeValidatorService;
 use App\Service\CurrencyValidatorService;
 use App\Service\ExchangeRatesService;
 use App\Service\ExchangeRateValidatorService;
