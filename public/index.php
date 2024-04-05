@@ -170,4 +170,24 @@ $app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Respon
     }
 });
 
+$app->get('/exchange', function (Request $request, Response $response) use ($dataBase) {
+    try {
+        $currenciesData = new CurrenciesDataGateway($dataBase);
+        $currenciesService = new CurrenciesService($currenciesData);
+        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+        $exchangeService = new ExchangeService($currenciesService, $exchangeRateData);
+        $exchangeValidator = new CurrencyExchangeValidatorService();
+        $requestDTO = $exchangeValidator->validate($request->getQueryParams());
+        $exchangeData = $exchangeService->currencyExchange($requestDTO);
+        $payload = json_encode($exchangeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (DatabaseNotFoundException|IncorrectInputException $e) {
+        $errorDTO = new ErrorResponseDTO($e->getMessage());
+        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $response->getBody()->write($payload);
+        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+    }
+});
+
 $app->run();
