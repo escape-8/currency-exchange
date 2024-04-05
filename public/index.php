@@ -13,6 +13,7 @@ use App\Service\CurrenciesService;
 use App\Service\CurrencyValidatorService;
 use App\Service\ExchangeRatesService;
 use App\Service\ExchangeRateValidatorService;
+use App\Service\ExchangeService;
 use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
