@@ -36,7 +36,7 @@ $app->get('/', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/currencies', function (Request $request, Response $response) use ($dataBase) {
+$app->get('/currencies', function () use ($dataBase) {
     $currenciesData = new CurrenciesDataGateway($dataBase);
     $currenciesService = new CurrenciesService($currenciesData);
     $currenciesData = $currenciesService->getAllCurrencies();
@@ -61,7 +61,7 @@ $app->get('/currency[/{currency}]', function (Request $request, Response $respon
 
 });
 
-$app->post('/currencies', function (Request $request, Response $response) use ($dataBase) {
+$app->post('/currencies', function (Request $request) use ($dataBase) {
     try {
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
@@ -75,7 +75,7 @@ $app->post('/currencies', function (Request $request, Response $response) use ($
     }
 });
 
-$app->get('/exchangeRates', function (Request $request, Response $response) use ($dataBase) {
+$app->get('/exchangeRates', function () use ($dataBase) {
     $currenciesData = new ExchangeRatesDataGateway($dataBase);
     $currenciesService = new ExchangeRatesService($currenciesData);
     $currenciesData = $currenciesService->getAllExchangeRates();
@@ -100,7 +100,7 @@ $app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response
 
 });
 
-$app->post('/exchangeRates', function (Request $request, Response $response) use ($dataBase) {
+$app->post('/exchangeRates', function (Request $request) use ($dataBase) {
     try {
         $currencyData = new CurrenciesDataGateway($dataBase);
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
@@ -137,7 +137,7 @@ $app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Respon
     }
 });
 
-$app->get('/exchange', function (Request $request, Response $response) use ($dataBase) {
+$app->get('/exchange', function (Request $request) use ($dataBase) {
     try {
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
