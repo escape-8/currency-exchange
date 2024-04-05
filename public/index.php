@@ -9,6 +9,7 @@ use App\Exception\DatabaseNotFoundException;
 use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
+use App\Http\JsonResponse;
 use App\Service\CurrenciesService;
 use App\Service\CurrencyExchangeValidatorService;
 use App\Service\CurrencyValidatorService;
@@ -39,34 +40,23 @@ $app->get('/currencies', function (Request $request, Response $response) use ($d
     $currenciesData = new CurrenciesDataGateway($dataBase);
     $currenciesService = new CurrenciesService($currenciesData);
     $currenciesData = $currenciesService->getAllCurrencies();
-    $payload = json_encode($currenciesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-    $response->getBody()->write($payload);
-    return $response->withHeader('Content-Type', 'application/json');
+    return new JsonResponse($currenciesData);
 });
 
 $app->get('/currency[/{currency}]', function (Request $request, Response $response, array $args) use ($dataBase) {
     if (!array_key_exists('currency', $args)) {
         $errorDTO = new ErrorResponseDTO('The currency code is missing in the URL address');
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $response->getBody()->write($payload);
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, 400);
     }
 
     try {
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
         $currencyData = $currenciesService->getCurrency($args['currency']);
-        $payload = json_encode($currencyData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($currencyData);
     } catch (DatabaseNotFoundException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 
 });
@@ -78,15 +68,10 @@ $app->post('/currencies', function (Request $request, Response $response) use ($
         $currencyValidation = new CurrencyValidatorService($currenciesData);
         $requestData = $request->getParsedBody();
         $currencyAddData = $currenciesService->addCurrency($currencyValidation->validate($requestData));
-        $payload = json_encode($currencyAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($currencyAddData, 201);
     } catch (EmptyFieldException|DataExistsException|IncorrectInputException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 });
 
@@ -94,33 +79,23 @@ $app->get('/exchangeRates', function (Request $request, Response $response) use 
     $currenciesData = new ExchangeRatesDataGateway($dataBase);
     $currenciesService = new ExchangeRatesService($currenciesData);
     $currenciesData = $currenciesService->getAllExchangeRates();
-    $payload = json_encode($currenciesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-    $response->getBody()->write($payload);
-    return $response->withHeader('Content-Type', 'application/json');
+    return new JsonResponse($currenciesData);
 });
 
 $app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
     if (!array_key_exists('currencyPair', $args)) {
         $errorDTO = new ErrorResponseDTO('The currency code pair is missing in the URL address');
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-        $response->getBody()->write($payload);
-        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, 400);
     }
 
     try {
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
         $exchangeRateData = $exchangeRateService->getExchangeRateByCurrencyPairCode($args['currencyPair']);
-        $payload = json_encode($exchangeRateData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($exchangeRateData);
     } catch (DatabaseNotFoundException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 
 });
@@ -133,9 +108,7 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
         $exchangeRateValidation = new ExchangeRateValidatorService($exchangeRateData, $currencyData);
         $requestData = $request->getParsedBody();
         $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
-        $payload = json_encode($exchangeRateAddData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($exchangeRateAddData, 201);
     } catch (
         EmptyFieldException|
         DataExistsException|
@@ -143,9 +116,7 @@ $app->post('/exchangeRates', function (Request $request, Response $response) use
         IncorrectInputException $e
     ) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 });
 
@@ -159,14 +130,10 @@ $app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Respon
         $exchangeRateValidation->validateRate($data);
         $exchangeRateValidation->validateCurrencyPair($args['currencyPair']);
         $exchangeRateUpdateData = $exchangeRateService->changeExchangeRate($args['currencyPair'], $data);
-        $payload = json_encode($exchangeRateUpdateData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($exchangeRateUpdateData);
     } catch (EmptyFieldException | IncorrectInputException | DatabaseNotFoundException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 });
 
@@ -179,14 +146,10 @@ $app->get('/exchange', function (Request $request, Response $response) use ($dat
         $exchangeValidator = new CurrencyExchangeValidatorService();
         $requestDTO = $exchangeValidator->validate($request->getQueryParams());
         $exchangeData = $exchangeService->currencyExchange($requestDTO);
-        $payload = json_encode($exchangeData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($exchangeData);
     } catch (DatabaseNotFoundException|IncorrectInputException $e) {
         $errorDTO = new ErrorResponseDTO($e->getMessage());
-        $payload = json_encode($errorDTO, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $response->getBody()->write($payload);
-        return $response->withStatus($e->getCode())->withHeader('Content-Type', 'application/json');
+        return new JsonResponse($errorDTO, $e->getCode());
     }
 });
 
