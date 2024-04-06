@@ -138,7 +138,7 @@ class ExchangeRatesDataGateway extends DataGateway
 
     public function insertExchangeRate(array $values): void
     {
-        $sql = "INSERT INTO exchange_rates (`base_currency_id`, `target_currency_id`, `rate`)
+        $sql = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate)
                 VALUES (:baseCurrencyId, :targetCurrencyId, :rate)";
         $statement = $this->dataBase->prepare($sql);
         $statement->execute($values);
@@ -146,7 +146,7 @@ class ExchangeRatesDataGateway extends DataGateway
 
     public function updateExchangeRate(array $values): void
     {
-        $sql = "UPDATE exchange_rates SET `rate` = :rate WHERE exchange_rates.id = :id";
+        $sql = "UPDATE exchange_rates SET rate = :rate WHERE exchange_rates.id = :id";
         $statement = $this->dataBase->prepare($sql);
         $statement->execute($values);
     }

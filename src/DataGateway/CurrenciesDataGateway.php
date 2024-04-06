@@ -11,7 +11,7 @@ class CurrenciesDataGateway extends DataGateway
      */
     public function getCurrency(string $currencyCode): array
     {
-        $sql = "SELECT * FROM currencies WHERE `code` = :code";
+        $sql = "SELECT * FROM currencies WHERE code = :code";
         $statement = $this->dataBase->prepare($sql);
         $statement->execute(['code' => $currencyCode]);
         $result = $statement->fetch();
@@ -38,7 +38,7 @@ class CurrenciesDataGateway extends DataGateway
 
     public function isCurrencyExists(string $currencyCode): bool
     {
-        $sql = "SELECT COUNT(*) FROM currencies WHERE `code` = :code";
+        $sql = "SELECT COUNT(*) FROM currencies WHERE code = :code";
         $statement = $this->dataBase->prepare($sql);
         $statement->execute(['code' => $currencyCode]);
         $result = $statement->fetch();
@@ -52,7 +52,7 @@ class CurrenciesDataGateway extends DataGateway
 
     public function insertCurrency(array $values): void
     {
-        $sql = "INSERT INTO currencies (`code`, `full_name`, `sign`) VALUES (:code, :name, :sign)";
+        $sql = "INSERT INTO currencies (code, full_name, sign) VALUES (:code, :name, :sign)";
         $statement = $this->dataBase->prepare($sql);
         $statement->execute($values);
     }
