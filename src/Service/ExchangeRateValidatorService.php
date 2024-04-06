@@ -9,7 +9,6 @@ use App\Exception\Validation\DataExistsException;
 use App\Exception\Validation\EmptyFieldException;
 use App\Exception\Validation\IncorrectInputException;
 use App\Model\Currency;
-use App\Model\ExchangeRate;
 
 class ExchangeRateValidatorService extends ValidatorService
 {
