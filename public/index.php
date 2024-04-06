@@ -44,11 +44,6 @@ $app->get('/currencies', function () use ($dataBase) {
 });
 
 $app->get('/currency[/{currency}]', function (Request $request, Response $response, array $args) use ($dataBase) {
-    if (!array_key_exists('currency', $args)) {
-        $errorDTO = new ErrorResponseDTO('The currency code is missing in the URL address');
-        return new JsonResponse($errorDTO, 400);
-    }
-
     try {
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
@@ -83,11 +78,6 @@ $app->get('/exchangeRates', function () use ($dataBase) {
 });
 
 $app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
-    if (!array_key_exists('currencyPair', $args)) {
-        $errorDTO = new ErrorResponseDTO('The currency code pair is missing in the URL address');
-        return new JsonResponse($errorDTO, 400);
-    }
-
     try {
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
