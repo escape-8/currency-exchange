@@ -2,9 +2,9 @@
 
 namespace App\Exception;
 
-use Exception;
+use RuntimeException;
 
-class DatabaseNotFoundException extends Exception
+class DatabaseNotFoundException extends RuntimeException
 {
     protected $code = 404;
     protected $message;
