@@ -10,9 +10,9 @@ class DatabaseNotFoundException extends RuntimeException
     protected $message;
 
     /**
-     * @param $message
+     * @param string $message
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         $this->message = $message;
         parent::__construct();
