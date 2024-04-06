@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 use App\DataGateway\CurrenciesDataGateway;
 use App\DataGateway\ExchangeRatesDataGateway;
-use App\DTO\ErrorResponseDTO;
-use App\Exception\DatabaseNotFoundException;
-use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\DataExistsException;
-use App\Exception\Validation\EmptyFieldException;
 use App\Http\JsonResponse;
 use App\Service\CurrenciesService;
 use App\Service\CurrencyExchangeValidatorService;
@@ -42,30 +37,19 @@ $app->get('/currencies', function () use ($dataBase) {
 });
 
 $app->get('/currency[/{currency}]', function (Request $request, Response $response, array $args) use ($dataBase) {
-    try {
-        $currenciesData = new CurrenciesDataGateway($dataBase);
-        $currenciesService = new CurrenciesService($currenciesData);
-        $currencyData = $currenciesService->getCurrency($args['currency']);
-        return new JsonResponse($currencyData);
-    } catch (DatabaseNotFoundException $e) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
-
+    $currenciesData = new CurrenciesDataGateway($dataBase);
+    $currenciesService = new CurrenciesService($currenciesData);
+    $currencyData = $currenciesService->getCurrency($args['currency']);
+    return new JsonResponse($currencyData);
 });
 
 $app->post('/currencies', function (Request $request) use ($dataBase) {
-    try {
-        $currenciesData = new CurrenciesDataGateway($dataBase);
-        $currenciesService = new CurrenciesService($currenciesData);
-        $currencyValidation = new CurrencyValidatorService();
-        $requestData = $request->getParsedBody();
-        $currencyAddData = $currenciesService->addCurrency($currencyValidation->validate($requestData));
-        return new JsonResponse($currencyAddData, 201);
-    } catch (EmptyFieldException|DataExistsException|IncorrectInputException $e) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
+    $currenciesData = new CurrenciesDataGateway($dataBase);
+    $currenciesService = new CurrenciesService($currenciesData);
+    $currencyValidation = new CurrencyValidatorService();
+    $requestData = $request->getParsedBody();
+    $currencyAddData = $currenciesService->addCurrency($currencyValidation->validate($requestData));
+    return new JsonResponse($currencyAddData, 201);
 });
 
 $app->get('/exchangeRates', function () use ($dataBase) {
@@ -76,68 +60,42 @@ $app->get('/exchangeRates', function () use ($dataBase) {
 });
 
 $app->get('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
-    try {
-        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
-        $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateData = $exchangeRateService->getExchangeRateByCurrencyPairCode($args['currencyPair']);
-        return new JsonResponse($exchangeRateData);
-    } catch (DatabaseNotFoundException $e) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
-
+    $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+    $exchangeRateService = new ExchangeRatesService($exchangeRateData);
+    $exchangeRateData = $exchangeRateService->getExchangeRateByCurrencyPairCode($args['currencyPair']);
+    return new JsonResponse($exchangeRateData);
 });
 
 $app->post('/exchangeRates', function (Request $request) use ($dataBase) {
-    try {
-        $currencyData = new CurrenciesDataGateway($dataBase);
-        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
-        $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
-        $requestData = $request->getParsedBody();
-        $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
-        return new JsonResponse($exchangeRateAddData, 201);
-    } catch (
-        EmptyFieldException|
-        DataExistsException|
-        DatabaseNotFoundException|
-        IncorrectInputException $e
-    ) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
+    $currencyData = new CurrenciesDataGateway($dataBase);
+    $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+    $exchangeRateService = new ExchangeRatesService($exchangeRateData);
+    $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
+    $requestData = $request->getParsedBody();
+    $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
+    return new JsonResponse($exchangeRateAddData, 201);
 });
 
 $app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Response $response, array $args) use ($dataBase) {
-    try {
-        $currencyData = new CurrenciesDataGateway($dataBase);
-        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
-        $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
-        $data = $request->getParsedBody();
-        $exchangeRateValidation->validateRate($data);
-        $exchangeRateUpdateData = $exchangeRateService->changeExchangeRate($args['currencyPair'], $data);
-        return new JsonResponse($exchangeRateUpdateData);
-    } catch (EmptyFieldException | IncorrectInputException | DatabaseNotFoundException $e) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
+    $currencyData = new CurrenciesDataGateway($dataBase);
+    $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+    $exchangeRateService = new ExchangeRatesService($exchangeRateData);
+    $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
+    $data = $request->getParsedBody();
+    $exchangeRateValidation->validateRate($data);
+    $exchangeRateUpdateData = $exchangeRateService->changeExchangeRate($args['currencyPair'], $data);
+    return new JsonResponse($exchangeRateUpdateData);
 });
 
 $app->get('/exchange', function (Request $request) use ($dataBase) {
-    try {
-        $currenciesData = new CurrenciesDataGateway($dataBase);
-        $currenciesService = new CurrenciesService($currenciesData);
-        $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
-        $exchangeService = new ExchangeService($currenciesService, $exchangeRateData);
-        $exchangeValidator = new CurrencyExchangeValidatorService();
-        $requestDTO = $exchangeValidator->validate($request->getQueryParams());
-        $exchangeData = $exchangeService->currencyExchange($requestDTO);
-        return new JsonResponse($exchangeData);
-    } catch (DatabaseNotFoundException|IncorrectInputException $e) {
-        $errorDTO = new ErrorResponseDTO($e->getMessage());
-        return new JsonResponse($errorDTO, $e->getCode());
-    }
+    $currenciesData = new CurrenciesDataGateway($dataBase);
+    $currenciesService = new CurrenciesService($currenciesData);
+    $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
+    $exchangeService = new ExchangeService($currenciesService, $exchangeRateData);
+    $exchangeValidator = new CurrencyExchangeValidatorService();
+    $requestDTO = $exchangeValidator->validate($request->getQueryParams());
+    $exchangeData = $exchangeService->currencyExchange($requestDTO);
+    return new JsonResponse($exchangeData);
 });
 
 $app->run();

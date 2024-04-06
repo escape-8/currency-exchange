@@ -5,7 +5,6 @@ namespace App\Service;
 use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\CurrencyRequestDTO;
 use App\DTO\CurrencyResponseDTO;
-use App\Exception\DatabaseNotFoundException;
 
 class CurrenciesService
 {
@@ -19,9 +18,6 @@ class CurrenciesService
         $this->dataGateway = $dataGateway;
     }
 
-    /**
-     * @throws DatabaseNotFoundException
-     */
     public function getCurrency(string $currencyCode): CurrencyResponseDTO
     {
         $currencyDbData = $this->dataGateway->getCurrency($currencyCode);

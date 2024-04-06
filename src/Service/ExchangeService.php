@@ -22,9 +22,6 @@ class ExchangeService
         $this->exchangeRatesDataGateway = $exchangeRatesDataGateway;
     }
 
-    /**
-     * @throws DatabaseNotFoundException
-     */
     public function currencyExchange(CurrencyExchangeRequestDTO $requestData): CurrencyExchangeResponseDTO
     {
         $currencyBase = $this->currenciesService->getCurrency($requestData->baseCurrency);
@@ -41,9 +38,6 @@ class ExchangeService
         );
     }
 
-    /**
-     * @throws DatabaseNotFoundException
-     */
     public function getExchangeRate(string $baseCurrency, string $targetCurrency): float
     {
         if ($this->exchangeRatesDataGateway->isExchangeRateExists($baseCurrency, $targetCurrency)) {
