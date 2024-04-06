@@ -93,7 +93,7 @@ $app->post('/exchangeRates', function (Request $request) use ($dataBase) {
         $currencyData = new CurrenciesDataGateway($dataBase);
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateValidation = new ExchangeRateValidatorService($exchangeRateData, $currencyData);
+        $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
         $requestData = $request->getParsedBody();
         $exchangeRateAddData = $exchangeRateService->addExchangeRate($exchangeRateValidation->validate($requestData));
         return new JsonResponse($exchangeRateAddData, 201);
@@ -113,10 +113,9 @@ $app->patch('/exchangeRate[/{currencyPair}]', function (Request $request, Respon
         $currencyData = new CurrenciesDataGateway($dataBase);
         $exchangeRateData = new ExchangeRatesDataGateway($dataBase);
         $exchangeRateService = new ExchangeRatesService($exchangeRateData);
-        $exchangeRateValidation = new ExchangeRateValidatorService($exchangeRateData, $currencyData);
+        $exchangeRateValidation = new ExchangeRateValidatorService($currencyData);
         $data = $request->getParsedBody();
         $exchangeRateValidation->validateRate($data);
-        $exchangeRateValidation->validateCurrencyPair($args['currencyPair']);
         $exchangeRateUpdateData = $exchangeRateService->changeExchangeRate($args['currencyPair'], $data);
         return new JsonResponse($exchangeRateUpdateData);
     } catch (EmptyFieldException | IncorrectInputException | DatabaseNotFoundException $e) {

@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\DataGateway\CurrenciesDataGateway;
-use App\DataGateway\ExchangeRatesDataGateway;
 use App\DTO\ExchangeRateRequestDTO;
 use App\Exception\DatabaseNotFoundException;
 use App\Exception\Validation\DataExistsException;
@@ -14,16 +13,13 @@ use App\Model\ExchangeRate;
 
 class ExchangeRateValidatorService extends ValidatorService
 {
-    private ExchangeRatesDataGateway $exchangeRatesDataGateway;
     private CurrenciesDataGateway $currenciesDataGateway;
 
     /**
-     * @param ExchangeRatesDataGateway $exchangeRatesDataGateway
      * @param CurrenciesDataGateway $currenciesDataGateway
      */
-    public function __construct(ExchangeRatesDataGateway $exchangeRatesDataGateway, CurrenciesDataGateway $currenciesDataGateway)
+    public function __construct(CurrenciesDataGateway $currenciesDataGateway)
     {
-        $this->exchangeRatesDataGateway = $exchangeRatesDataGateway;
         $this->currenciesDataGateway = $currenciesDataGateway;
     }
 
@@ -46,22 +42,6 @@ class ExchangeRateValidatorService extends ValidatorService
         $this->checkAllLettersUpperCase($data['targetCurrencyCode']);
         $this->checkIsNumeric($data['rate']);
         $this->validateRateNumericSyntax($data['rate']);
-
-        if (!$this->currenciesDataGateway->isCurrencyExists($data['baseCurrencyCode'])) {
-            throw new DatabaseNotFoundException(
-                'The ' . $data['baseCurrencyCode'] . ' currency from the currency pair does not exist in the database'
-            );
-        }
-
-        if (!$this->currenciesDataGateway->isCurrencyExists($data['targetCurrencyCode'])) {
-            throw new DatabaseNotFoundException(
-                'The ' . $data['targetCurrencyCode'] . ' currency from the currency pair does not exist in the database'
-            );
-        }
-
-        if ($this->exchangeRatesDataGateway->isExchangeRateExists($data['baseCurrencyCode'], $data['targetCurrencyCode'])) {
-            throw new DataExistsException('A currency pair with this codes already exists: ' . $data['baseCurrencyCode'] . $data['targetCurrencyCode']);
-        }
 
         return new ExchangeRateRequestDTO(
             $this->currenciesDataGateway->getCurrency($data['baseCurrencyCode'])['id'],
@@ -88,26 +68,6 @@ class ExchangeRateValidatorService extends ValidatorService
 
         $this->checkIsNumeric($data['rate']);
         $this->validateRateNumericSyntax($data['rate']);
-    }
-
-    /**
-     * @throws DatabaseNotFoundException
-     * @throws IncorrectInputException
-     */
-    public function validateCurrencyPair(string $currencyPair): void
-    {
-        if (strlen($currencyPair) !== ExchangeRate::COUNT_LETTERS_IN_EXCHANGE_RATE_CODE) {
-            throw new IncorrectInputException(
-                'The currency pair must contain uppercase letters. ' .
-                '3 letters – base currency and 3 letters – target currency. For example: EURUSD, USDRUB, BTCUSD'
-            );
-        }
-
-        [$baseCurrencyCode, $targetCurrencyCode] = str_split($currencyPair, Currency::COUNT_LETTERS_IN_CODE);
-
-        if (!$this->exchangeRatesDataGateway->isExchangeRateExists($baseCurrencyCode, $targetCurrencyCode)) {
-            throw new DatabaseNotFoundException("Currency pair $currencyPair is not in the database");
-        }
     }
 
     /**
