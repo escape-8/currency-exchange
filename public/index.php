@@ -16,7 +16,6 @@ use App\Service\CurrencyValidatorService;
 use App\Service\ExchangeRatesService;
 use App\Service\ExchangeRateValidatorService;
 use App\Service\ExchangeService;
-use Middleware\TrailingSlashMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -24,9 +23,8 @@ use Slim\Factory\AppFactory;
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
-$app->add(new TrailingSlashMiddleware());
-$app->addBodyParsingMiddleware();
-$app->addRoutingMiddleware();
+
+(require __DIR__ . '/../config/middleware.php')($app);
 
 $dbConnection = new DatabaseConnection();
 $dataBase = $dbConnection->getConnection();
