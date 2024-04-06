@@ -4,10 +4,7 @@ namespace App\Service;
 
 use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\ExchangeRateRequestDTO;
-use App\Exception\DatabaseNotFoundException;
-use App\Exception\Validation\DataExistsException;
-use App\Exception\Validation\EmptyFieldException;
-use App\Exception\Validation\IncorrectInputException;
+use App\Exception\ValidationException;
 use App\Model\Currency;
 
 class ExchangeRateValidatorService extends ValidatorService
@@ -22,12 +19,6 @@ class ExchangeRateValidatorService extends ValidatorService
         $this->currenciesDataGateway = $currenciesDataGateway;
     }
 
-    /**
-     * @throws DatabaseNotFoundException
-     * @throws EmptyFieldException
-     * @throws DataExistsException
-     * @throws IncorrectInputException
-     */
     public function validate(array $data): ExchangeRateRequestDTO
     {
         $this->checkEmptyFields($data);
@@ -49,10 +40,6 @@ class ExchangeRateValidatorService extends ValidatorService
         );
     }
 
-    /**
-     * @throws IncorrectInputException
-     * @throws EmptyFieldException
-     */
     public function validateRate(array $data): void
     {
         $errors = [];
@@ -62,27 +49,21 @@ class ExchangeRateValidatorService extends ValidatorService
         }
 
         if ($errors) {
-            throw new EmptyFieldException($errors);
+            throw new ValidationException('A required form field is missing' . ' : ' . implode(', ', $errors), 400);
         }
 
         $this->checkIsNumeric($data['rate']);
         $this->validateRateNumericSyntax($data['rate']);
     }
 
-    /**
-     * @throws IncorrectInputException
-     */
     public function validateRateNumericSyntax(string $rate): void
     {
         preg_match('/^0\d/', $rate, $matches);
         if (count($matches) > 0) {
-            throw new IncorrectInputException("Format '$rate' incorrect. Example correct format: 1, 2.61, 0.03021 etc");
+            throw new ValidationException("Format '$rate' incorrect. Example correct format: 1, 2.61, 0.03021 etc", 409);
         }
     }
 
-    /**
-     * @throws EmptyFieldException
-     */
     public function checkEmptyFields(array $data): void
     {
         $errors = [];
@@ -100,7 +81,7 @@ class ExchangeRateValidatorService extends ValidatorService
         }
 
         if ($errors) {
-            throw new EmptyFieldException($errors);
+            throw new ValidationException('A required form field is missing' . ' : ' . implode(', ', $errors), 400);
         }
 
     }

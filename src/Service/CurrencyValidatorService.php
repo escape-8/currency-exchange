@@ -3,19 +3,11 @@
 namespace App\Service;
 
 use App\DTO\CurrencyRequestDTO;
-use App\Exception\Validation\IncorrectInputException;
-use App\Exception\Validation\DataExistsException;
-use App\Exception\Validation\EmptyFieldException;
+use App\Exception\ValidationException;
 use App\Model\Currency;
 
 class CurrencyValidatorService extends ValidatorService
 {
-
-    /**
-     * @throws EmptyFieldException
-     * @throws DataExistsException
-     * @throws IncorrectInputException
-     */
     public function validate(array $data): CurrencyRequestDTO
     {
         $this->checkEmptyFields($data);
@@ -27,9 +19,6 @@ class CurrencyValidatorService extends ValidatorService
         return new CurrencyRequestDTO($data['code'], $data['name'], $data['sign']);
     }
 
-    /**
-     * @throws EmptyFieldException
-     */
     public function checkEmptyFields(array $data): void
     {
         $errors = [];
@@ -47,8 +36,7 @@ class CurrencyValidatorService extends ValidatorService
         }
 
         if ($errors) {
-            throw new EmptyFieldException($errors);
+            throw new ValidationException('A required form field is missing' . ' : ' . implode(', ', $errors), 400);
         }
-
     }
 }

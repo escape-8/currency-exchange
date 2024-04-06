@@ -2,60 +2,45 @@
 
 namespace App\Service;
 
-use App\Exception\Validation\IncorrectInputException;
+use App\Exception\ValidationException;
 
 abstract class ValidatorService
 {
-    /**
-     * @throws IncorrectInputException
-     */
     public function checkContainsOnlyLetters(string $string): void
     {
         preg_match_all('/[[:alpha:]]/', $string, $matches, PREG_PATTERN_ORDER);
 
         if (count($matches[0]) !== strlen($string)) {
-            throw new IncorrectInputException("The '$string' must contain only letters");
+            throw new ValidationException("The '$string' must contain only letters", 409);
         }
     }
 
-    /**
-     * @throws IncorrectInputException
-     */
     public function checkStringLength(string $string, int $stringMaxLength): void
     {
         if (strlen($string) !== $stringMaxLength) {
-            throw new IncorrectInputException("The '$string' must contain $stringMaxLength symbols");
+            throw new ValidationException("The '$string' must contain $stringMaxLength symbols", 409);
         }
     }
 
-    /**
-     * @throws IncorrectInputException
-     */
     public function checkSpace($string): void
     {
         $nonSpaceString = str_replace(' ', '', $string);
         if (strlen($nonSpaceString) !== strlen($string)) {
-            throw new IncorrectInputException("The line '$string' must not contain spaces");
+            throw new ValidationException("The line '$string' must not contain spaces", 409);
         }
     }
 
-    /**
-     * @throws IncorrectInputException
-     */
     public function checkIsNumeric(mixed $value): void
     {
         if (!is_numeric($value)) {
-            throw new IncorrectInputException("Format '$value' incorrect. Example correct format: 1, 2.61, 0.03021 etc");
+            throw new ValidationException("Format '$value' incorrect. Example correct format: 1, 2.61, 0.03021 etc", 409);
         }
     }
 
-    /**
-     * @throws IncorrectInputException
-     */
     public function checkAllLettersUpperCase(string $string): void
     {
         if ($string !== strtoupper($string)) {
-            throw new IncorrectInputException("The line '$string' must be only uppercase letters");
+            throw new ValidationException("The line '$string' must be only uppercase letters", 409);
         }
     }
 }
