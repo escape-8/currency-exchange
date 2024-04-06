@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\DataGateway\CurrenciesDataGateway;
 use App\DTO\CurrencyRequestDTO;
 use App\Exception\Validation\IncorrectInputException;
 use App\Exception\Validation\DataExistsException;
@@ -11,15 +10,6 @@ use App\Model\Currency;
 
 class CurrencyValidatorService extends ValidatorService
 {
-    private CurrenciesDataGateway $dataGateway;
-
-    /**
-     * @param CurrenciesDataGateway $dataGateway
-     */
-    public function __construct(CurrenciesDataGateway $dataGateway)
-    {
-        $this->dataGateway = $dataGateway;
-    }
 
     /**
      * @throws EmptyFieldException
@@ -33,10 +23,6 @@ class CurrencyValidatorService extends ValidatorService
         $this->checkSpace($data['code']);
         $this->checkContainsOnlyLetters($data['code']);
         $this->checkAllLettersUpperCase($data['code']);
-
-        if ($this->dataGateway->isCurrencyExists($data['code'])) {
-            throw new DataExistsException('A currency with this code already exists: ' . $data['code']);
-        }
 
         return new CurrencyRequestDTO($data['code'], $data['name'], $data['sign']);
     }

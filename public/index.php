@@ -58,7 +58,7 @@ $app->post('/currencies', function (Request $request) use ($dataBase) {
     try {
         $currenciesData = new CurrenciesDataGateway($dataBase);
         $currenciesService = new CurrenciesService($currenciesData);
-        $currencyValidation = new CurrencyValidatorService($currenciesData);
+        $currencyValidation = new CurrencyValidatorService();
         $requestData = $request->getParsedBody();
         $currencyAddData = $currenciesService->addCurrency($currencyValidation->validate($requestData));
         return new JsonResponse($currencyAddData, 201);
