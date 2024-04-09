@@ -4,9 +4,6 @@
     "type": "project",
     "license": "MIT",
     "autoload": {
-        "files": [
-            "./database/DatabaseConnection.php"
-        ],
         "psr-4": {
             "App\\": "src/"
         }
