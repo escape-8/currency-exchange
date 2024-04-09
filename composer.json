@@ -18,6 +18,7 @@
         "slim/slim": "^4.13",
         "guzzlehttp/psr7": "^2.6",
         "http-interop/http-factory-guzzle": "^1.2",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "php-di/php-di": "^7.0"
     }
 }
