@@ -25,7 +25,7 @@ class URLCurrencyCodesMiddleware
         $pattern = $route->getPattern();
         $arguments = $route->getArguments();
 
-        if ($messagesForEmptyCurrencyCodes[$pattern] && !$arguments) {
+        if (isset($messagesForEmptyCurrencyCodes[$pattern]) && !$arguments) {
             return new JsonResponse(new ErrorResponseDTO($messagesForEmptyCurrencyCodes[$pattern]), 400);
         }
 
