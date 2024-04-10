@@ -115,7 +115,7 @@ class ExchangeRatesService
      */
     public function changeExchangeRate(string $currencyPair, array $data): ExchangeRateResponseDTO
     {
-        $rate = (float) $data['rate'];
+        $rate = (float) number_format($data['rate'], 6, '.', '');
         $exchangeRate = $this->getExchangeRateByCurrencyPairCode($currencyPair);
         $this->dataGateway->updateExchangeRate(['id' => $exchangeRate->id, 'rate' => $rate]);
         return $this->getExchangeRateByCurrencyPairCode($currencyPair);

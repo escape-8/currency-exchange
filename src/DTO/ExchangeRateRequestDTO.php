@@ -17,7 +17,7 @@ class ExchangeRateRequestDTO implements DTOInterface
     {
         $this->baseCurrencyId = $baseCurrencyId;
         $this->targetCurrencyId = $targetCurrencyId;
-        $this->rate = (float) $rate;
+        $this->rate = (float) number_format($rate, 6, '.', '');
     }
 
     public function toArray(): array
