@@ -8,6 +8,7 @@ use App\Actions\ExchangeAction;
 use App\Actions\ExchangeRateAction;
 use App\Actions\ExchangeRatesAction;
 use App\Actions\HomeAction;
+use App\Actions\PreflightRequestsAction;
 use Slim\App;
 
 return static function (App $app) {
@@ -28,4 +29,7 @@ return static function (App $app) {
     $app->patch('/exchangeRate[/{currencyPair}]', [ExchangeRateAction::class, 'update']);
 
     $app->get('/exchange', [ExchangeAction::class, 'exchange']);
+
+    // Allow preflight requests
+    $app->options('/{routes:.+}', PreflightRequestsAction::class);
 };

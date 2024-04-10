@@ -10,6 +10,7 @@ return static function (App $app) {
     $app->add(new Middleware\DatabaseNotFoundExceptionHandler());
     $app->add(new Middleware\ValidationExceptionHandler());
     $app->add(new Middleware\URLCurrencyCodesMiddleware());
+    $app->add(new Middleware\CORSResponseMiddleware());
     $app->addBodyParsingMiddleware();
     $app->addRoutingMiddleware();
     $app->add(new Middleware\TrailingSlashMiddleware());
