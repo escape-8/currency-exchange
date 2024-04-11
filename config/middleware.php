@@ -11,6 +11,7 @@ return static function (App $app) {
     $app->add(new Middleware\ValidationExceptionHandler());
     $app->add(new Middleware\URLCurrencyCodesMiddleware());
     $app->add(new Middleware\CORSResponseMiddleware());
+    $app->addErrorMiddleware(false,true,true);
     $app->addBodyParsingMiddleware();
     $app->addRoutingMiddleware();
     $app->add(new Middleware\TrailingSlashMiddleware());
