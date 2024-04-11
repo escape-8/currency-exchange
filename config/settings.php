@@ -4,7 +4,7 @@ $settings = [];
 
 //Db
 $settings['db'] = [
-    'dsn' => 'sqlite:../databaseSeed.sqlite',
+    'dsn' => 'sqlite:../database.sqlite',
     'username' => null,
     'password' => null,
     'options' => [
