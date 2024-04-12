@@ -12,7 +12,7 @@ use App\Actions\PreflightRequestsAction;
 use Slim\App;
 
 return static function (App $app) {
-    $app->get('/', [HomeAction::class, 'index']);
+    $app->get('/', HomeAction::class);
 
     $app->get('/currencies', [CurrenciesAction::class, 'show']);
 

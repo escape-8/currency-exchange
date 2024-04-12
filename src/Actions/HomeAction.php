@@ -9,9 +9,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeAction
 {
-    public function index(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response): Response
     {
-        $response->getBody()->write("Hello world!");
+        $response->getBody()->write('');
         return $response;
     }
 }
