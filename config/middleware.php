@@ -6,6 +6,7 @@ use App\Middleware;
 use Slim\App;
 
 return static function (App $app) {
+    $app->add((new Middleware\ExceptionHandler()));
     $app->add(new Middleware\PDOExceptionMiddleware());
     $app->add(new Middleware\DatabaseNotFoundExceptionHandler());
     $app->add(new Middleware\ValidationExceptionHandler());
