@@ -10,12 +10,17 @@ The web interface of the project can be found [HERE](https://github.com/zhukovsd
 - php 8.1
 - SQLite
 - Slim microframework
+- Postman
 
 ## Project motivation
 
 - Introduction to MVC
 - REST API - correct naming of resources, use of HTTP response codes
 - SQL - basic syntax, table creation
+- Work with Postman, test endpoints
+
+## Postman API
+Public Collection [HERE](https://www.postman.com/supply-astronaut-73332974/workspace/currency-exchange-api/collection/32195670-9c8cc94a-8b0e-494f-850d-66738e8514c8?action=share&creator=32195670)
 
 ### Currencies
 
